@@ -1,10 +1,13 @@
 from typing import List, Optional
+from config import TEST_DATA
 from src.sudoku import Sudoku
 
+
 def test_read_sudoku() -> None:
-    s:Sudoku = Sudoku()
-    s.read_sudoku("../src/test_input.txt")
+    s:Sudoku = Sudoku.read_sudoku(TEST_DATA / "test_input.txt")
     assert s.grid != []
+    assert len(s.grid) == 9
+    assert len(s.grid[0]) == 9
 
 def test_write_sudoku() -> None:
     grid:List[List[Optional[int]]]  = [
@@ -19,9 +22,9 @@ def test_write_sudoku() -> None:
         [3, 4, 5, 2, 8, 6, 1, 7, None],
     ]
     s:Sudoku = Sudoku(grid)
-    s.write_sudoku("../src/test_output.txt")
+    s.write_sudoku(TEST_DATA / "test_output.txt")
     new_grid:List[List[Optional[int]]]  = []
-    file = open("../src/test_output.txt")
+    file = open(TEST_DATA / "test_output.txt")
     for line in file:
         split:List[str] = line.split()
         row:List[Optional[int]] = [int(x) if x.isdigit() else None for x in split]
@@ -70,7 +73,7 @@ def test_invalid_sudoku_solution() -> None:
         [3, 4, 5, 2, 8, 6, 1, 7, 1],  # This last cell should be 9 instead of 1
     ]
     s:Sudoku = Sudoku(grid)
-    assert s.check_solution() is False
+    assert not s.check_solution()
     grid = [
         [5, 3, 4, 6, 7, 8, 9, 1, 2],
         [6, 7, 2, 1, 9, 5, 3, 4, 8],
