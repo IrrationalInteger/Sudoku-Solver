@@ -1,2 +1,89 @@
-def test():
-    assert True
+from typing import List, Optional
+from src.sudoku import Sudoku
+
+def test_read_sudoku() -> None:
+    s:Sudoku = Sudoku()
+    s.read_sudoku("../src/test_input.txt")
+    assert s.grid != []
+
+def test_write_sudoku() -> None:
+    grid:List[List[Optional[int]]]  = [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, None],
+    ]
+    s:Sudoku = Sudoku(grid)
+    s.write_sudoku("../src/test_output.txt")
+    new_grid:List[List[Optional[int]]]  = []
+    file = open("../src/test_output.txt")
+    for line in file:
+        split:List[str] = line.split()
+        row:List[Optional[int]] = [int(x) if x.isdigit() else None for x in split]
+        new_grid.append(row)
+    assert grid == new_grid
+
+def test_valid_sudoku_solution() -> None:
+    grid:List[List[Optional[int]]]  = [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, 9],
+    ]
+    s:Sudoku = Sudoku(grid)
+    assert s.check_solution() is True
+
+    grid = [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, None, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, None],
+     ]
+    s = Sudoku(grid)
+    assert s.check_solution() is True
+
+def test_invalid_sudoku_solution() -> None:
+    grid:List[List[Optional[int]]]  = [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, 1],  # This last cell should be 9 instead of 1
+    ]
+    s:Sudoku = Sudoku(grid)
+    assert s.check_solution() is False
+    grid = [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 9, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, 5],
+    ]
+    s = Sudoku(grid)
+    assert not s.check_solution()
+
+
+
