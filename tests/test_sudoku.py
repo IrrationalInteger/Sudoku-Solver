@@ -1,4 +1,5 @@
 from typing import List, Optional
+from pysat.formula import CNF  # type: ignore
 from config import TEST_DATA
 from src.sudoku import Sudoku
 
@@ -90,3 +91,34 @@ def test_invalid_sudoku_solution() -> None:
     ]
     s = Sudoku(grid)
     assert not s.check_solution()
+
+
+def test_sat_solver() -> None:
+    s: Sudoku = Sudoku.read_sudoku(TEST_DATA / "test_input.txt")
+    cnf: CNF = Sudoku.encode_sat(s.grid)
+    solved_grid: List[List[int]] | None = Sudoku.solve_sat(cnf)
+    assert solved_grid == [
+        [2, 1, 4, 9, 7, 8, 3, 6, 5],
+        [3, 6, 5, 1, 4, 2, 8, 9, 7],
+        [8, 9, 7, 6, 5, 3, 2, 1, 4],
+        [6, 4, 2, 3, 1, 5, 9, 7, 8],
+        [5, 3, 1, 7, 8, 9, 6, 4, 2],
+        [9, 7, 8, 4, 2, 6, 5, 3, 1],
+        [1, 2, 3, 8, 9, 7, 4, 5, 6],
+        [4, 5, 6, 2, 3, 1, 7, 8, 9],
+        [7, 8, 9, 5, 6, 4, 1, 2, 3],
+    ]
+    s = Sudoku.read_sudoku(TEST_DATA / "test_input2.txt")
+    cnf = Sudoku.encode_sat(s.grid)
+    solved_grid = Sudoku.solve_sat(cnf)
+    assert solved_grid == [
+        [5, 3, 4, 6, 7, 8, 9, 1, 2],
+        [6, 7, 2, 1, 9, 5, 3, 4, 8],
+        [1, 9, 8, 3, 4, 2, 5, 6, 7],
+        [8, 5, 9, 7, 6, 1, 4, 2, 3],
+        [4, 2, 6, 8, 5, 3, 7, 9, 1],
+        [7, 1, 3, 9, 2, 4, 8, 5, 6],
+        [9, 6, 1, 5, 3, 7, 2, 8, 4],
+        [2, 8, 7, 4, 1, 9, 6, 3, 5],
+        [3, 4, 5, 2, 8, 6, 1, 7, 9],
+    ]

@@ -161,7 +161,7 @@ def main() -> None:
             for row in matrix:
                 print(" ".join(map(str, row)))
 
-        print_matrix(Sudoku.solve_sat(cnf))
+        print(Sudoku.solve_sat(cnf))
     else:
         print("The Sudoku puzzle solution is incorrect.")
 
