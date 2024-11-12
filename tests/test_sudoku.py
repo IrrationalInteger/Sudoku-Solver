@@ -1,7 +1,8 @@
 from typing import List, Optional
 from pysat.formula import CNF  # type: ignore
 from config import TEST_DATA
-from src.sudoku import Sudoku
+from src.sudoku.sudoku import Sudoku
+from src.sudoku.sudoku_sat import encode_sat, solve_sat
 
 
 def test_read_sudoku() -> None:
@@ -95,8 +96,8 @@ def test_invalid_sudoku_solution() -> None:
 
 def test_sat_solver() -> None:
     s: Sudoku = Sudoku.read_sudoku(TEST_DATA / "test_input.txt")
-    cnf: CNF = Sudoku.encode_sat(s.grid)
-    solved_grid: List[List[int]] | None = Sudoku.solve_sat(cnf)
+    cnf: CNF = encode_sat(s.grid)
+    solved_grid: List[List[int]] | None = solve_sat(cnf)
     assert solved_grid == [
         [2, 1, 4, 9, 7, 8, 3, 6, 5],
         [3, 6, 5, 1, 4, 2, 8, 9, 7],
@@ -109,8 +110,8 @@ def test_sat_solver() -> None:
         [7, 8, 9, 5, 6, 4, 1, 2, 3],
     ]
     s = Sudoku.read_sudoku(TEST_DATA / "test_input2.txt")
-    cnf = Sudoku.encode_sat(s.grid)
-    solved_grid = Sudoku.solve_sat(cnf)
+    cnf = encode_sat(s.grid)
+    solved_grid = solve_sat(cnf)
     assert solved_grid == [
         [5, 3, 4, 6, 7, 8, 9, 1, 2],
         [6, 7, 2, 1, 9, 5, 3, 4, 8],
