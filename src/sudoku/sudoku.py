@@ -15,16 +15,21 @@ class Sudoku:
                 file
             ):  # Use enumerate to get the index of each line
                 split: List[str] = line.split()
-                row: List[int | None] = [int(x) if x.isdigit() else None for x in split]
+                row: List[int | None] = [
+                    int(x) if x.isdigit() else None for x in split
+                ]
                 if len(row) < 9:
                     print(
-                        f"Row {index + 1} is shorter than 9 elements, appending {9 - len(row)} None values."
+                        f"Row {index + 1} is shorter than 9 elements, "
+                        f"appending {9 - len(row)} None values."
                     )
                     row += [None] * (9 - len(row))
                 grid.append(row)
 
         if len(grid) < 9:
-            print("Grid has fewer than 9 rows, appending rows of 9 None values.")
+            print(
+                "Grid has fewer than 9 rows, appending rows of 9 None values."
+            )
             grid += [[None] * 9] * (9 - len(grid))
         return Sudoku(grid)
 
@@ -32,7 +37,8 @@ class Sudoku:
         with open(path, "w") as file:
             for row in self.grid:
                 print(
-                    " ".join(str(x) if x is not None else "_" for x in row), file=file
+                    " ".join(str(x) if x is not None else "_" for x in row),
+                    file=file,
                 )
 
     def check_solution(self) -> bool:
@@ -45,7 +51,9 @@ class Sudoku:
                 return False
 
         for col in range(9):
-            column: List[int | None] = [self.grid[row][col] for row in range(9)]
+            column: List[int | None] = [
+                self.grid[row][col] for row in range(9)
+            ]
             if not has_no_duplicates(column):
                 return False
 

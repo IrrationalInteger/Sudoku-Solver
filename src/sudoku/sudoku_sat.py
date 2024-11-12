@@ -7,7 +7,9 @@ def x(row: int, col: int, val: int) -> int:
     return row * 81 + col * 9 + val
 
 
-def append_single_cell_constraints(grid: List[List[int | None]], cnf: CNF) -> None:
+def append_single_cell_constraints(
+    grid: List[List[int | None]], cnf: CNF
+) -> None:
     for r in range(9):
         for c in range(9):
             if grid[r][c] is not None:
@@ -31,6 +33,7 @@ def append_row_column_constraints(cnf: CNF) -> None:
             for r1 in range(9):
                 for r2 in range(r1 + 1, 9):
                     cnf.append([-x(r1, c, v), -x(r2, c, v)])
+
 
 def append_subgrid_constraints(cnf: CNF) -> None:
     for block_row in range(3):

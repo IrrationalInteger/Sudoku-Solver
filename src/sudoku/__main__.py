@@ -8,14 +8,17 @@ from src.sudoku.sudoku_sat import encode_sat, solve_sat
 if __name__ == "__main__":
     parser: ArgumentParser = argparse.ArgumentParser(
         prog="Sudoku Solver",
-        description="This is a sudoko solver that reads problems from an input txt and checks if they are solvable",
+        description="This is a sudoko solver that reads problems"
+        " from an input txt and checks if they are solvable",
     )
     # TODO: Refactor to use files
     parser.add_argument(
         "input", type=str, help="Path to the input file with the Sudoku puzzle"
     )
     parser.add_argument(
-        "output", type=str, help="Path to the output file to write the Sudoku puzzle"
+        "output",
+        type=str,
+        help="Path to the output file to write the Sudoku puzzle",
     )
     args: argparse.Namespace = parser.parse_args()
 

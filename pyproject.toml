@@ -1,7 +1,7 @@
 [project]
 name = "sudokusolver"
 version = "0.1.0"
-description = "Add your description here"
+description = "A sudoku solver that uses different approaches"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -10,3 +10,19 @@ dependencies = [
     "python-sat[aiger,approxmc,cryptosat,pblib]>=1.8.dev13",
     "ruff>=0.7.2",
 ]
+
+[tool.mypy]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15

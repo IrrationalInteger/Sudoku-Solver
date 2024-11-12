@@ -30,7 +30,9 @@ def test_write_sudoku() -> None:
     file = open(TEST_DATA / "test_output.txt")
     for line in file:
         split: List[str] = line.split()
-        row: List[Optional[int]] = [int(x) if x.isdigit() else None for x in split]
+        row: List[Optional[int]] = [
+            int(x) if x.isdigit() else None for x in split
+        ]
         new_grid.append(row)
     assert grid == new_grid
 
