@@ -1,8 +1,11 @@
 import argparse
 from argparse import ArgumentParser
+from typing import List, cast
+
 from pysat.formula import CNF  # type: ignore
 from config import TEST_DATA
 from src.sudoku.sudoku import Sudoku
+from src.sudoku.sudoku_integer import encode_int, solve_int
 from src.sudoku.sudoku_sat import encode_sat, solve_sat
 
 if __name__ == "__main__":
@@ -27,13 +30,19 @@ if __name__ == "__main__":
 
     if sudoku.check_solution():
         print("The Sudoku puzzle is solved correctly or can be solved.")
-        cnf: CNF = encode_sat(sudoku.grid)
-        print("Solving Sudoku puzzle using SAT solver...")
 
-        def print_matrix(matrix):
+        def print_matrix(matrix: List[List[int | None]]) -> None:
             for row in matrix:
                 print(" ".join(map(str, row)))
 
-        print_matrix(solve_sat(cnf))
+        cnf: CNF = encode_sat(sudoku)
+        print("Solving Sudoku puzzle using SAT solver...")
+        print_matrix(cast(List[List[int | None]], solve_sat(cnf)))
+
+        int_encoding, x = encode_int(sudoku)
+        print("Solving Sudoku puzzle using Integer Programming...")
+        print_matrix(
+            cast(List[List[int | None]], solve_int(sudoku, int_encoding, x))
+        )
     else:
         print("The Sudoku puzzle solution is incorrect.")

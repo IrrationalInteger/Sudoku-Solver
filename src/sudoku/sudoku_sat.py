@@ -2,6 +2,8 @@ from typing import List, cast
 from pysat.solvers import Glucose3  # type: ignore
 from pysat.formula import CNF  # type: ignore
 
+from src.sudoku.sudoku import Sudoku
+
 
 def x(row: int, col: int, val: int) -> int:
     return row * 81 + col * 9 + val
@@ -49,10 +51,10 @@ def append_subgrid_constraints(cnf: CNF) -> None:
                         cnf.append([-x(r1, c1, v), -x(r2, c2, v)])
 
 
-def encode_sat(grid: List[List[int | None]]) -> CNF:
+def encode_sat(sudoku: Sudoku) -> CNF:
     cnf: CNF = CNF()
 
-    append_single_cell_constraints(grid, cnf)
+    append_single_cell_constraints(sudoku.grid, cnf)
     append_row_column_constraints(cnf)
     append_subgrid_constraints(cnf)
 
