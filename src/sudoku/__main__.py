@@ -3,8 +3,10 @@ from argparse import ArgumentParser
 from typing import List, cast
 
 from pysat.formula import CNF  # type: ignore
+
 from config import TEST_DATA
 from src.sudoku.sudoku import Sudoku
+from src.sudoku.sudoku_constraint import encode_const, solve_const
 from src.sudoku.sudoku_integer import encode_int, solve_int
 from src.sudoku.sudoku_sat import encode_sat, solve_sat
 
@@ -43,6 +45,12 @@ if __name__ == "__main__":
         print("Solving Sudoku puzzle using Integer Programming...")
         print_matrix(
             cast(List[List[int | None]], solve_int(sudoku, int_encoding, x))
+        )
+
+        model, x = encode_const(sudoku)
+        print("Solving Sudoku puzzle using Constraint Programming...")
+        print_matrix(
+            cast(List[List[int | None]], solve_const(sudoku, model, x))
         )
     else:
         print("The Sudoku puzzle solution is incorrect.")

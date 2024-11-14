@@ -42,6 +42,19 @@ wheels = [
 ]
 
 [[package]]
+name = "cpmpy"
+version = "0.9.23"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "ortools" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/70/f9/6a115663a99e312e44c9502c5ca283fe0543a8cafd3d95bbd2f9c3783d46/cpmpy-0.9.23.tar.gz", hash = "sha256:14c51b6a5c717596b033b68599e03b1d073bf7e8708e716317848552f74e9e22", size = 120040 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e5/7d/f238d09cb84b6bcc81d01b0ba9a7c98bcac40a39d5c6d4e48415f0c89d44/cpmpy-0.9.23-py3-none-any.whl", hash = "sha256:44cb5f8cf43fc8606a00a0d7c545d9a33eb1b46edc90fe047405b3a248f04cd2", size = 152038 },
+]
+
+[[package]]
 name = "funcy"
 version = "1.18"
 source = { registry = "https://pypi.org/simple" }
@@ -449,6 +462,7 @@ name = "sudokusolver"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "cpmpy" },
     { name = "mypy" },
     { name = "ortools" },
     { name = "pytest" },
@@ -458,6 +472,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cpmpy", specifier = ">=0.9.23" },
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "ortools", specifier = ">=9.11.4210" },
     { name = "pytest", specifier = ">=8.3.3" },

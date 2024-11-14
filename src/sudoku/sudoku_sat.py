@@ -1,10 +1,12 @@
 from typing import List, cast
-from pysat.solvers import Glucose3  # type: ignore
+
 from pysat.formula import CNF  # type: ignore
+from pysat.solvers import Glucose3  # type: ignore
 
 from src.sudoku.sudoku import Sudoku
 
 
+# TODO: Change all code to use n>9
 def x(row: int, col: int, val: int) -> int:
     return row * 81 + col * 9 + val
 
