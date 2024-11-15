@@ -28,17 +28,20 @@ def append_row_column_constraints(
             solver.Add(sum(x[r][c][v] for c in range(sudoku.n)) == 1)
 
 
-# TODO: Change all code to use n>9
 def append_subgrid_constraints(
     sudoku: Sudoku, solver: Any, x: list[list[list]]
 ) -> None:
-    for block_row in range(3):
-        for block_col in range(3):
+    subgrid_size = int(sudoku.n**0.5)
+    for block_row in range(subgrid_size):
+        for block_col in range(subgrid_size):
             for v in range(sudoku.n):
                 cells = [
-                    (block_row * 3 + r, block_col * 3 + c)
-                    for r in range(3)
-                    for c in range(3)
+                    (
+                        block_row * subgrid_size + r,
+                        block_col * subgrid_size + c,
+                    )
+                    for r in range(subgrid_size)
+                    for c in range(subgrid_size)
                 ]
                 solver.Add(sum(x[r][c][v] for r, c in cells) == 1)
 

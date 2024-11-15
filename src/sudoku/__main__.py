@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
         cnf: CNF = encode_sat(sudoku)
         print("Solving Sudoku puzzle using SAT solver...")
-        print_matrix(cast(List[List[int | None]], solve_sat(cnf)))
+        print_matrix(cast(List[List[int | None]], solve_sat(cnf, sudoku.n)))
 
         int_encoding, x = encode_int(sudoku)
         print("Solving Sudoku puzzle using Integer Programming...")
