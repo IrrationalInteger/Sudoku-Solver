@@ -5,7 +5,9 @@ description = "A sudoku solver that uses different approaches"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "cpmpy>=0.9.23",
     "mypy>=1.13.0",
+    "ortools>=9.11.4210",
     "pytest>=8.3.3",
     "python-sat[aiger,approxmc,cryptosat,pblib]>=1.8.dev13",
     "ruff>=0.7.2",

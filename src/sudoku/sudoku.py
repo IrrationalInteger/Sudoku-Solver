@@ -6,7 +6,13 @@ from typing import List
 @dataclass
 class Sudoku:
     grid: List[List[int | None]]
+    n: int
 
+    def __init__(self, grid: List[List[int | None]]) -> None:
+        self.grid = grid
+        self.n = len(grid)
+
+    # TODO: Change all code to use n>9
     @staticmethod
     def read_sudoku(path: Path) -> "Sudoku":
         grid: List[List[int | None]] = []
@@ -31,7 +37,9 @@ class Sudoku:
                 "Grid has fewer than 9 rows, appending rows of 9 None values."
             )
             grid += [[None] * 9] * (9 - len(grid))
-        return Sudoku(grid)
+
+        s: Sudoku = Sudoku(grid)
+        return s
 
     def write_sudoku(self, path: Path) -> None:
         with open(path, "w") as file:
