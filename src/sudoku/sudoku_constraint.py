@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 from cpmpy import Model, intvar, AllDifferent  # type: ignore
 from cpmpy.expressions.variables import _IntVarImpl  # type: ignore
@@ -55,12 +55,10 @@ def encode_const(sudoku: Sudoku) -> Tuple[Model, List[List[_IntVarImpl]]]:
 
 def solve_const(
     sudoku: Sudoku, model: Model, x: List[List[_IntVarImpl]]
-) -> Optional[List[List[int]]]:
+) -> List[List[int]]:
+    solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
     if model.solve():
         solved_grid = [
             [x[r][c].value() for c in range(sudoku.n)] for r in range(sudoku.n)
         ]
-        return solved_grid
-    else:
-        print("No solution found!")
-        return None
+    return solved_grid

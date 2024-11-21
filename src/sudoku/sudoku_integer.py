@@ -65,18 +65,15 @@ def encode_int(sudoku: Sudoku) -> Tuple[Any, List[List[Any]]]:
 
 def solve_int(
     sudoku: Sudoku, solver: Any, x: List[List[Any]]
-) -> List[List[int]] | None:
+) -> List[List[int]]:
     status = solver.Solve()
+    solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
-        solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
         for r in range(sudoku.n):
             for c in range(sudoku.n):
                 for v in range(sudoku.n):
                     if x[r][c][v].solution_value() == 1:
                         solved_grid[r][c] = v + 1
                         break
-        return solved_grid
-    else:
-        print("No solution found!")
-        return None
+    return solved_grid

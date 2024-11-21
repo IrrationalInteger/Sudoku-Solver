@@ -1,4 +1,4 @@
-from typing import List, Optional, cast
+from typing import List, cast
 from pysat.formula import CNF  # type: ignore
 from pysat.solvers import Glucose3  # type: ignore
 from src.sudoku.sudoku import Sudoku
@@ -49,19 +49,16 @@ def encode_sat(sudoku: Sudoku) -> CNF:
     return cnf
 
 
-def solve_sat(cnf: CNF, size: int) -> Optional[List[List[int]]]:
+def solve_sat(cnf: CNF, size: int) -> List[List[int]]:
     solver = Glucose3()
     solver.append_formula(cnf)
+    solved_grid = [[0 for _ in range(size)] for _ in range(size)]
     if solver.solve():
         model = solver.get_model()
-        solved_grid = [[0 for _ in range(size)] for _ in range(size)]
         for value in model:
             if value > 0:
                 r = (value - 1) // (size * size)
                 c = ((value - 1) // size) % size
                 v = (value - 1) % size + 1
                 solved_grid[r][c] = v
-        return solved_grid
-    else:
-        print("This Sudoku is unsolvable.")
-        return None
+    return solved_grid
