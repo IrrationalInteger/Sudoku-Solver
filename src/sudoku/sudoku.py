@@ -27,7 +27,7 @@ class Sudoku:
                 if math.isqrt(len(row)) ** 2 != len(row):
                     size = max(size, (math.isqrt(len(row)) + 1) ** 2)
                     print(
-                        f"Row {index + 1} is not a perfect square, appending"
+                        f"Row {index + 1} is not a perfect square, appending "
                         f"{(math.isqrt(len(row))+1) ** 2  - len(row)}"
                         f" None values."
                     )
