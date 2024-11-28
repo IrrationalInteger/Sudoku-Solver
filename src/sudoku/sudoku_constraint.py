@@ -1,13 +1,11 @@
-from typing import List, Tuple
-
+from typing import Tuple
 from cpmpy import Model, intvar, AllDifferent  # type: ignore
 from cpmpy.expressions.variables import _IntVarImpl  # type: ignore
-
-from src.sudoku.sudoku import Sudoku
+from sudoku.sudoku import Sudoku
 
 
 def append_single_cell_constraints(
-    sudoku: Sudoku, model: Model, x: List[List[_IntVarImpl]]
+    sudoku: Sudoku, model: Model, x: list[list[_IntVarImpl]]
 ) -> None:
     for r in range(sudoku.n):
         for c in range(sudoku.n):
@@ -16,7 +14,7 @@ def append_single_cell_constraints(
 
 
 def append_row_column_constraints(
-    sudoku: Sudoku, model: Model, x: List[List[_IntVarImpl]]
+    sudoku: Sudoku, model: Model, x: list[list[_IntVarImpl]]
 ) -> None:
     for r in range(sudoku.n):
         model += [AllDifferent(x[r])]
@@ -26,7 +24,7 @@ def append_row_column_constraints(
 
 
 def append_subgrid_constraints(
-    sudoku: Sudoku, model: Model, x: List[List[_IntVarImpl]]
+    sudoku: Sudoku, model: Model, x: list[list[_IntVarImpl]]
 ) -> None:
     subgrid_size: int = int(sudoku.n**0.5)
     for br in range(subgrid_size):
@@ -39,7 +37,7 @@ def append_subgrid_constraints(
             model += [AllDifferent(cells)]
 
 
-def encode_const(sudoku: Sudoku) -> Tuple[Model, List[List[_IntVarImpl]]]:
+def encode_const(sudoku: Sudoku) -> Tuple[Model, list[list[_IntVarImpl]]]:
     x = [
         [intvar(1, sudoku.n) for _ in range(sudoku.n)] for _ in range(sudoku.n)
     ]
@@ -54,8 +52,8 @@ def encode_const(sudoku: Sudoku) -> Tuple[Model, List[List[_IntVarImpl]]]:
 
 
 def solve_const(
-    sudoku: Sudoku, model: Model, x: List[List[_IntVarImpl]]
-) -> List[List[int]]:
+    sudoku: Sudoku, model: Model, x: list[list[_IntVarImpl]]
+) -> list[list[int]]:
     solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
     if model.solve():
         solved_grid = [

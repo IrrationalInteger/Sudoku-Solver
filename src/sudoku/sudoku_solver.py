@@ -1,5 +1,4 @@
-from typing import List, Tuple
-
+from typing import Tuple
 from attr import dataclass
 from pysat.formula import CNF  # type: ignore
 from .sudoku import Sudoku  # type: ignore
@@ -7,7 +6,7 @@ from .sudoku_constraint import encode_const, solve_const  # type: ignore
 from .sudoku_integer import encode_int, solve_int  # type: ignore
 from .sudoku_sat import encode_sat, solve_sat  # type: ignore
 
-Matrix = List[List[int]]
+Matrix = list[list[int]]
 
 
 @dataclass

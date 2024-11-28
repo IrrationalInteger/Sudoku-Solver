@@ -1,9 +1,9 @@
 import cmd
 from pathlib import Path
 from typing import List, cast
-
 from attr import dataclass
-from src.sudoku import Sudoku, SudokuSolver
+from .sudoku import Sudoku
+from .sudoku_solver import SudokuSolver
 
 
 def print_matrix(matrix: List[List[int]]) -> None:
@@ -110,5 +110,5 @@ class SudokuCLI(cmd.Cmd):
             print(f"Error: Could not save the puzzle. {e}")
 
 
-if __name__ == "__main__":
+def main() -> None:
     SudokuCLI().cmdloop()

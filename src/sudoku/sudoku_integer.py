@@ -1,8 +1,6 @@
-from typing import List, Tuple, Any, cast
-
+from typing import Tuple, Any, cast
 from ortools.linear_solver import pywraplp  # type: ignore
-
-from src.sudoku.sudoku import Sudoku
+from sudoku.sudoku import Sudoku
 
 
 def append_single_cell_constraints(
@@ -46,7 +44,7 @@ def append_subgrid_constraints(
                 solver.Add(sum(x[r][c][v] for r, c in cells) == 1)
 
 
-def encode_int(sudoku: Sudoku) -> Tuple[Any, List[List[Any]]]:
+def encode_int(sudoku: Sudoku) -> Tuple[Any, list[list[Any]]]:
     solver = pywraplp.Solver.CreateSolver("SCIP")
     x = [
         [
@@ -64,8 +62,8 @@ def encode_int(sudoku: Sudoku) -> Tuple[Any, List[List[Any]]]:
 
 
 def solve_int(
-    sudoku: Sudoku, solver: Any, x: List[List[Any]]
-) -> List[List[int]]:
+    sudoku: Sudoku, solver: Any, x: list[list[Any]]
+) -> list[list[int]]:
     status = solver.Solve()
     solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
 

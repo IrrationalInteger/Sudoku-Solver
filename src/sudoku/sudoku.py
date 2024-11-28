@@ -1,26 +1,26 @@
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from sudoku.sudoku_iterator import SudokuIterator
 
 
 @dataclass
 class Sudoku:
-    grid: List[List[int | None]]
+    grid: list[list[int | None]]
     n: int
 
-    def __init__(self, grid: List[List[int | None]]) -> None:
+    def __init__(self, grid: list[list[int | None]]) -> None:
         self.grid = grid
         self.n = len(grid)
 
     @staticmethod
     def read_sudoku(path: Path) -> "Sudoku":
-        grid: List[List[int | None]] = []
+        grid: list[list[int | None]] = []
         with open(path) as file:
             size = 0
             for index, line in enumerate(file):
-                split: List[str] = line.split()
-                row: List[int | None] = [
+                split: list[str] = line.split()
+                row: list[int | None] = [
                     int(x) if x.isdigit() else None for x in split
                 ]
                 size = max(size, len(row))
@@ -54,30 +54,25 @@ class Sudoku:
                 )
 
     def check_solution(self) -> bool:
-        def has_no_duplicates(numbers: List[int | None]) -> bool:
+        def has_no_duplicates(numbers: list[int | None]) -> bool:
             numbers = [x for x in numbers if x is not None]
             return len(numbers) == len(set(numbers))
 
-        for row in self.grid:
+        iterator = SudokuIterator(self.grid)
+
+        for cells in iterator.iter_rows():
+            row = [self.grid[r][c] for r, c in cells]
             if not has_no_duplicates(row):
                 return False
 
-        for col in range(self.n):
-            column: List[int | None] = [
-                self.grid[row][col] for row in range(self.n)
-            ]
-            if not has_no_duplicates(column):
+        for cells in iterator.iter_cols():
+            col = [self.grid[r][c] for r, c in cells]
+            if not has_no_duplicates(col):
                 return False
 
-        subgrid_size = int(math.sqrt(self.n))
-        for start_row in range(0, self.n, subgrid_size):
-            for start_col in range(0, self.n, subgrid_size):
-                subgrid: List[int | None] = [
-                    self.grid[r][c]
-                    for r in range(start_row, start_row + subgrid_size)
-                    for c in range(start_col, start_col + subgrid_size)
-                ]
-                if not has_no_duplicates(subgrid):
-                    return False
+        for cells in iterator.iter_cells():
+            subgrid = [self.grid[r][c] for r, c in cells]
+            if not has_no_duplicates(subgrid):
+                return False
 
         return True
