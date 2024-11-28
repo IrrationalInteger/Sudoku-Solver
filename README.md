@@ -17,11 +17,7 @@ A simple CLI interface to load sudoku puzzles, solve them, and save the puzzles 
 - Python 3.x
 - `uv` package
 
-You can install the required dependencies using `pip`:
 
-```bash
-pip install uv
-```
 ## Setting Up the Project
 Clone this repository:
 
@@ -29,17 +25,20 @@ Clone this repository:
 git clone https://github.com/IrrationalInteger/Sudoku-Solver
 cd Sudoku-Solver
 ```
-Install the dependencies:
+Create a virtual environment and install the dependencies:
 
 ```bash
-uv install
+python3 -m venv .venv
+source .venv/bin/activate
+pip install uv
+uv sync
 ```
 
 ## Usage
 To run the CLI, you can use the following command:
 
 ```bash
-python sudoku_cli.py
+uv run sudoku-cli
 ```
 
 To list all CLI Commands
@@ -97,5 +96,5 @@ save <path_to_file>
 To run tests, use:
 
 ```bash
-pytest tests/test_sudoku.py
+uv run -- pytest tests/test_sudoku.py
 ```
