@@ -1,15 +1,12 @@
-import sys
-import os
-
 from typing import List, Optional
 from pysat.formula import CNF  # type: ignore
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from sudoku.sudoku import Sudoku
 from sudoku.sudoku_constraint import encode_const, solve_const
 from sudoku.sudoku_integer import encode_int, solve_int
 from sudoku.sudoku_sat import encode_sat, solve_sat
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-from config import TEST_DATA
+
+from pathlib import Path
+TEST_DATA = Path(__file__).parent / "test_data"
 
 
 def test_read_sudoku() -> None:

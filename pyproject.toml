@@ -1,5 +1,5 @@
 [project]
-name = "sudokusolver"
+name = "sudoku"
 version = "0.1.0"
 description = "A sudoku solver that uses different approaches"
 readme = "README.md"
@@ -8,12 +8,11 @@ dependencies = [
     "cpmpy>=0.9.23",
     "mypy>=1.13.0",
     "ortools>=9.11.4210",
+    "pysat>=3.2.1",
     "pytest>=8.3.3",
     "python-sat[aiger,approxmc,cryptosat,pblib]>=1.8.dev13",
-    "ruff>=0.7.2",
+    "setuptools>=75.6.0",
 ]
-[tool.uv]
-package = true
 
 [tool.mypy]
 disallow_untyped_defs = true
@@ -30,6 +29,16 @@ select = ["E", "F", "W", "C"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 15
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "ruff>=0.7.2",
+]
 
 [project.scripts]
 sudoku-cli = "sudoku.sudoku_cli:main"

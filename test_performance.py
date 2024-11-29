@@ -1,8 +1,8 @@
 import time
 from typing import Any, TypeVar, Callable, Tuple
-from src.sudoku import SudokuSolver
+from sudoku import SudokuSolver
 from config import TEST_DATA
-from src.sudoku.sudoku import Sudoku
+from sudoku.sudoku import Sudoku
 
 T = TypeVar("T")
 A = TypeVar("A")
