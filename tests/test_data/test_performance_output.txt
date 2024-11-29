@@ -1,0 +1,16 @@
+Performance for sudoku size 9x9
+SAT: 0.0053
+Integer: 0.0054
+Constraint: 0.0138
+Performance for sudoku size 16x16
+SAT: 0.0660
+Integer: 0.0269
+Constraint: 0.0354
+Performance for sudoku size 25x25
+SAT: 2.2719
+Integer: 1511.9640
+Constraint: 1.9019
+Performance for sudoku size 36x36
+SAT: 525.0747
+Constraint: 9.6376
+

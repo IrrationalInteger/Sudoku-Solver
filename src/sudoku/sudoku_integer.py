@@ -1,8 +1,6 @@
-from typing import List, Tuple, Any, cast
-
+from typing import Tuple, Any, cast
 from ortools.linear_solver import pywraplp  # type: ignore
-
-from src.sudoku.sudoku import Sudoku
+from sudoku.sudoku import Sudoku
 
 
 def append_single_cell_constraints(
@@ -28,22 +26,25 @@ def append_row_column_constraints(
             solver.Add(sum(x[r][c][v] for c in range(sudoku.n)) == 1)
 
 
-# TODO: Change all code to use n>9
 def append_subgrid_constraints(
     sudoku: Sudoku, solver: Any, x: list[list[list]]
 ) -> None:
-    for block_row in range(3):
-        for block_col in range(3):
+    subgrid_size = int(sudoku.n**0.5)
+    for block_row in range(subgrid_size):
+        for block_col in range(subgrid_size):
             for v in range(sudoku.n):
                 cells = [
-                    (block_row * 3 + r, block_col * 3 + c)
-                    for r in range(3)
-                    for c in range(3)
+                    (
+                        block_row * subgrid_size + r,
+                        block_col * subgrid_size + c,
+                    )
+                    for r in range(subgrid_size)
+                    for c in range(subgrid_size)
                 ]
                 solver.Add(sum(x[r][c][v] for r, c in cells) == 1)
 
 
-def encode_int(sudoku: Sudoku) -> Tuple[Any, List[List[Any]]]:
+def encode_int(sudoku: Sudoku) -> Tuple[Any, list[list[Any]]]:
     solver = pywraplp.Solver.CreateSolver("SCIP")
     x = [
         [
@@ -61,19 +62,16 @@ def encode_int(sudoku: Sudoku) -> Tuple[Any, List[List[Any]]]:
 
 
 def solve_int(
-    sudoku: Sudoku, solver: Any, x: List[List[Any]]
-) -> List[List[int]] | None:
+    sudoku: Sudoku, solver: Any, x: list[list[Any]]
+) -> list[list[int]]:
     status = solver.Solve()
+    solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
-        solved_grid = [[0] * sudoku.n for _ in range(sudoku.n)]
         for r in range(sudoku.n):
             for c in range(sudoku.n):
                 for v in range(sudoku.n):
                     if x[r][c][v].solution_value() == 1:
                         solved_grid[r][c] = v + 1
                         break
-        return solved_grid
-    else:
-        print("No solution found!")
-        return None
+    return solved_grid

@@ -1,81 +1,72 @@
+from itertools import combinations
 from typing import List, cast
-
 from pysat.formula import CNF  # type: ignore
 from pysat.solvers import Glucose3  # type: ignore
-
-from src.sudoku.sudoku import Sudoku
-
-
-# TODO: Change all code to use n>9
-def x(row: int, col: int, val: int) -> int:
-    return row * 81 + col * 9 + val
+from sudoku.sudoku import Sudoku
+from sudoku.sudoku_iterator import SudokuIterator
 
 
-def append_single_cell_constraints(
-    grid: List[List[int | None]], cnf: CNF
-) -> None:
-    for r in range(9):
-        for c in range(9):
-            if grid[r][c] is not None:
-                cnf.append([x(r, c, cast(int, (grid[r][c])))])
+def x(row: int, col: int, val: int, size: int) -> int:
+    return row * size * size + col * size + val
+
+
+def at_most_one(variables: List[int], cnf: CNF) -> None:
+    for v1, v2 in combinations(variables, 2):
+        cnf.append([-v1, -v2])
+
+
+def append_single_cell_constraints(iterator: SudokuIterator, cnf: CNF) -> None:
+    n = len(iterator.grid)
+    for row in iterator.iter_rows():
+        for r, c in row:
+            if iterator.grid[r][c] is not None:
+                cnf.append([x(r, c, cast(int, iterator.grid[r][c]), n)])
             else:
-                cnf.append([x(r, c, v) for v in range(1, 10)])
-                for v1 in range(1, 10):
-                    for v2 in range(v1 + 1, 10):
-                        cnf.append([-x(r, c, v1), -x(r, c, v2)])
+                cnf.append([x(r, c, v, n) for v in range(1, n + 1)])
+                variables = [x(r, c, v, n) for v in range(1, n + 1)]
+                at_most_one(variables, cnf)
 
 
-def append_row_column_constraints(cnf: CNF) -> None:
-    for r in range(9):
-        for v in range(1, 10):
-            for c1 in range(9):
-                for c2 in range(c1 + 1, 9):
-                    cnf.append([-x(r, c1, v), -x(r, c2, v)])
+def append_row_column_constraints(iterator: SudokuIterator, cnf: CNF) -> None:
+    size = len(iterator.grid)
+    for row in iterator.iter_rows():
+        for v in range(1, size + 1):
+            variables = [x(r, c, v, size) for r, c in row]
+            at_most_one(variables, cnf)
 
-    for c in range(9):
-        for v in range(1, 10):
-            for r1 in range(9):
-                for r2 in range(r1 + 1, 9):
-                    cnf.append([-x(r1, c, v), -x(r2, c, v)])
+    for col in iterator.iter_cols():
+        for v in range(1, size + 1):
+            variables = [x(r, c, v, size) for r, c in col]
+            at_most_one(variables, cnf)
 
 
-def append_subgrid_constraints(cnf: CNF) -> None:
-    for block_row in range(3):
-        for block_col in range(3):
-            for v in range(1, 10):
-                cells = [
-                    (block_row * 3 + r, block_col * 3 + c)
-                    for r in range(3)
-                    for c in range(3)
-                ]
-                for i, (r1, c1) in enumerate(cells):
-                    for r2, c2 in cells[i + 1 :]:
-                        cnf.append([-x(r1, c1, v), -x(r2, c2, v)])
+def append_subgrid_constraints(iterator: SudokuIterator, cnf: CNF) -> None:
+    n = len(iterator.grid)
+    for cell_group in iterator.iter_cells():
+        for v in range(1, n + 1):
+            variables = [x(r, c, v, n) for r, c in cell_group]
+            at_most_one(variables, cnf)
 
 
 def encode_sat(sudoku: Sudoku) -> CNF:
     cnf: CNF = CNF()
-
-    append_single_cell_constraints(sudoku.grid, cnf)
-    append_row_column_constraints(cnf)
-    append_subgrid_constraints(cnf)
-
+    iterator = SudokuIterator(sudoku.grid)
+    append_single_cell_constraints(iterator, cnf)
+    append_row_column_constraints(iterator, cnf)
+    append_subgrid_constraints(iterator, cnf)
     return cnf
 
 
-def solve_sat(cnf: CNF) -> List[List[int]] | None:
+def solve_sat(cnf: CNF, size: int) -> list[list[int]]:
     solver = Glucose3()
     solver.append_formula(cnf)
+    solved_grid = [[0 for _ in range(size)] for _ in range(size)]
     if solver.solve():
         model = solver.get_model()
-        solved_grid = [[0 for _ in range(9)] for _ in range(9)]
         for value in model:
             if value > 0:
-                r = (value - 1) // 81
-                c = ((value - 1) // 9) % 9
-                v = (value - 1) % 9 + 1
+                r = (value - 1) // (size * size)
+                c = ((value - 1) // size) % size
+                v = (value - 1) % size + 1
                 solved_grid[r][c] = v
-        return solved_grid
-    else:
-        print("This Sudoku is unsolvable.")
-        return None
+    return solved_grid
